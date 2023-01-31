@@ -28,6 +28,7 @@ private:
     QTextEdit *p_name;
     QComboBox *p_type;
     MainWindow *p_window;
+    QComboBox *p_box;
 };
 
 #endif // PASSPORT_H

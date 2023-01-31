@@ -46,10 +46,10 @@ Passport::Passport(QWidget *parent, MainWindow *win) : QWidget(parent), p_window
     p_layout->addWidget(p_type);
     p_type->setVisible(false);
 
-    QComboBox *a = new QComboBox();
-    a->insertItems(0, {"items", "jobs"});
-    p_layout->addWidget(a);
-    connect(a, SIGNAL(currentIndexChanged(int)), this, SLOT(change_type(int)));
+    p_box = new QComboBox();
+    p_box->insertItems(0, {"items", "jobs"});
+    p_layout->addWidget(p_box);
+    connect(p_box, SIGNAL(currentIndexChanged(int)), this, SLOT(change_type(int)));
 }
 
 void Passport::change_type(int a)
@@ -67,17 +67,18 @@ void Passport::change_type(int a)
     }
 }
 void Passport::fillFields(QString a, int index) {
-    change_type(index);
+    p_box->setCurrentIndex(index);
+    //    change_type(index);
     QStringList buff;
     if (index == 0) {
         buff = p_window->handler->get_item_info(a);
     } else if (index == 1) {
         buff = p_window->handler->get_job_info(a);
     }
-    pl_id->setText(buff.at(0));
-    pl_name->setText(buff.at(1));
+    p_id->setText(buff.at(0));
+    p_name->setText(buff.at(1));
     if (index == 0) {
-        pl_description->setText(buff.at(2));
+        p_description->setText(buff.at(2));
     } else if (index == 1) {
         p_type->setCurrentIndex(buff.at(2).toInt());
     }

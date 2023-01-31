@@ -17,7 +17,7 @@ signals:
 
 private slots:
     void show_table(int);
-//    void set_passport_data();
+    void set_passport_data(int, int);
 
 private:
     QTableWidget *d_table;

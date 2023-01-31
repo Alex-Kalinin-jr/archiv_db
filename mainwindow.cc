@@ -50,7 +50,7 @@ MainWindow::MainWindow()
     layer_1_1 = new QGridLayout(center_1);
     setCentralWidget(center_1);
 
-    passport = new Passport();
+    passport = new Passport(nullptr, this);
     layer_1_1->addWidget(passport, 0, 0, 3, 1);
 
     dt = new DataTable(nullptr, this);
