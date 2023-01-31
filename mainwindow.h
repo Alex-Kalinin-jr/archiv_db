@@ -6,6 +6,8 @@
 #include <QtSql>
 #include "db_handler.h"
 #include "db_struct.h"
+#include "passport.h"
+#include "datatable.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -18,8 +20,15 @@ class MainWindow : public QMainWindow
 public:
     MainWindow();
     ~MainWindow();
-
     void loadFile(const QString &fileName);
+    db_struct * get_items();
+    db_struct * get_jobs();
+    Passport * get_passport();
+    DataTable * get_datatable();
+
+
+
+    Db_handler *handler;
 
 protected:
 //    void closeEvent(QCloseEvent *event) override;
@@ -27,30 +36,16 @@ protected:
 private slots:
     bool on_search_clicked();
     void takeActInDb();
-//    void newFile();
-//    void open();
-//    bool save();
-//    bool saveAs();
-//    void about();
-//    void documentWasModified();
-//#ifndef QT_NO_SESSIONMANAGER
-//    void commitData(QSessionManager &);
-//#endif
+
 
 private:
-//    void createActions();
-//    void createStatusBar();
-//    void readSettings();
-//    void writeSettings();
-//    bool maybeSave();
-//    bool saveFile(const QString &fileName);
-//    void setCurrentFile(const QString &fileName);
-//    QString strippedName(const QString &fullFileName);
-
-//    QPlainTextEdit *textEdit;
     QString p_curFile;
+    QGridLayout *layer_1_1;
+    QTableWidget *itemTable;
+    bool itemShow = false;
     db_struct * it_struct;
     db_struct *j_struct;
-    Db_handler *handler;
+    Passport *passport;
+    DataTable *dt;
 };
 #endif // MAINWINDOW_H

@@ -5,6 +5,9 @@
 #include <QtWidgets>
 #include <QFormLayout>
 #include <QFileDialog>
+#include <QTableWidget>
+#include "passport.h"
+#include "datatable.h"
 
 //#include <QByteArray>
 
@@ -31,62 +34,46 @@ void MainWindow::takeActInDb() {
     return;
 }
 
-//bool MainWindow::loadData() {
-
-//}
-
 
 MainWindow::MainWindow()
-//    : textEdit(new QPlainTextEdit) {
 {
-    handler = new Db_handler();
+    handler = new Db_handler("QMYSQL", "localhost", "work_db", "root", "Df8a9c");
     if (handler->isOk()) {
-        it_struct = new db_struct("items");
-        j_struct = new db_struct("jobs");
-
+        it_struct = new db_struct("items", "id, name, description", 3);
+        j_struct = new db_struct("jobs", "id, job, type", 3);
+        handler->set_data(it_struct);
+        handler->set_data(j_struct);
     }
-
-
 
     // make central widget of the window be layout
     QWidget *center_1 = new QWidget();
-    QGridLayout *layer_1_1 = new QGridLayout(center_1);
+    layer_1_1 = new QGridLayout(center_1);
     setCentralWidget(center_1);
 
+    passport = new Passport(this, this);
+    layer_1_1->addWidget(passport, 0, 0, 3, 1);
 
-    QWidget *itemWidget = new QWidget();
-    itemWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    layer_1_1->addWidget(itemWidget, 0, 0, 1, 2, Qt::AlignRight);
-
-    QFormLayout *itemDataForm = new QFormLayout(itemWidget);
-    QLineEdit *itemID = new QLineEdit();
-    itemDataForm->addRow("ID of", itemID);
-    QTextEdit *itemName = new QTextEdit();
-    itemDataForm->addRow("Name", itemName);
-    QTextEdit *itemDescription = new QTextEdit();
-    itemDataForm->addRow("Description", itemDescription);
-
-
-    QPushButton *search = new QPushButton();
-    layer_1_1->addWidget(search, 1, 0);
-    connect(search, SIGNAL(clicked()), this, SLOT(on_search_clicked()));
-
-    QPushButton *write = new QPushButton();
-    layer_1_1->addWidget(write, 1, 1);
-
-
-
-    QLabel *test = new QLabel();
-    if (handler->isOk()) {
-        test->setText("YES");
-    } else {
-        test->setText("no");
-    }
-    layer_1_1->addWidget(test, 0, 2, 2, 1, Qt::AlignCenter);
+    dt = new DataTable(this, this);
+    layer_1_1->addWidget(dt, 0, 1, 3, 1);
 
     setLayout(layer_1_1);
 
+}
 
+db_struct *MainWindow::get_items() {
+    return it_struct;
+}
+
+db_struct *MainWindow::get_jobs() {
+    return j_struct;
+}
+
+Passport * MainWindow::get_passport() {
+    return passport;
+}
+
+DataTable * MainWindow::get_datatable() {
+    return dt;
 }
 
 //resize(800, 600);
