@@ -50,10 +50,10 @@ MainWindow::MainWindow()
     layer_1_1 = new QGridLayout(center_1);
     setCentralWidget(center_1);
 
-    passport = new Passport(this, this);
+    passport = new Passport();
     layer_1_1->addWidget(passport, 0, 0, 3, 1);
 
-    dt = new DataTable(this, this);
+    dt = new DataTable(nullptr, this);
     layer_1_1->addWidget(dt, 0, 1, 3, 1);
 
     setLayout(layer_1_1);
@@ -76,6 +76,25 @@ DataTable * MainWindow::get_datatable() {
     return dt;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //resize(800, 600);
 //setWindowTitle("db_program_test - [*]");
 //setCentralWidget(textEdit);
@@ -89,27 +108,6 @@ DataTable * MainWindow::get_datatable() {
 //#endif
 //setCurrentFile(QString());
 //setUnifiedTitleAndToolBarOnMac(true);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

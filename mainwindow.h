@@ -8,7 +8,8 @@
 #include "db_struct.h"
 #include "passport.h"
 #include "datatable.h"
-
+class Passport;
+class DataTable;
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -31,7 +32,6 @@ public:
     Db_handler *handler;
 
 protected:
-//    void closeEvent(QCloseEvent *event) override;
 
 private slots:
     bool on_search_clicked();

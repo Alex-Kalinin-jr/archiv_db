@@ -79,7 +79,7 @@ void Passport::fillFields(QString a, int index) {
     if (index == 0) {
         pl_description->setText(buff.at(2));
     } else if (index == 1) {
-        p_type->setCurrentIndex(buff.at(2));
+        p_type->setCurrentIndex(buff.at(2).toInt());
     }
 }
 

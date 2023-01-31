@@ -5,6 +5,7 @@
 #include <QtWidgets>
 #include "db_struct.h"
 #include "mainwindow.h"
+class MainWindow;
 
 class DataTable : public QWidget
 {
@@ -16,7 +17,7 @@ signals:
 
 private slots:
     void show_table(int);
-    void set_passport_data();
+//    void set_passport_data();
 
 private:
     QTableWidget *d_table;

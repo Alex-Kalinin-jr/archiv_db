@@ -16,7 +16,7 @@ DataTable::DataTable(QWidget *parent, MainWindow *window)
     d_layout->addWidget(d_table);
     d_layout->addWidget(d_type);
     connect(d_type, SIGNAL(currentIndexChanged(int)), this, SLOT(show_table(int)));
-    connect(d_table, SIGNAL(cellClicked(int,int)), this, SLOT(set_passport_data(int, int)));
+//    connect(d_table, SIGNAL(cellClicked(int,int)), this, SLOT(set_passport_data(int, int)));
 }
 
 bool DataTable::showData(db_struct *data)
@@ -53,9 +53,9 @@ void DataTable::show_table(int a)
     }
 }
 
-void DataTable::set_passport_data(int row, int col) {
-    QString buff = d_table->item(0, col)->text();
-    int indicator = d_type->currentIndex();
-    window->get_passport()->func
+//void DataTable::set_passport_data(int row, int col) {
+//    QString buff = d_table->item(0, col)->text();
+//    int indicator = d_type->currentIndex();
+//    window->get_passport()->func
 
-}
+//}

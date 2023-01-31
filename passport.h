@@ -4,12 +4,12 @@
 #include <QWidget>
 #include <QtWidgets>
 #include "mainwindow.h"
-
+class MainWindow;
 class Passport : public QWidget
 {
     Q_OBJECT
 public:
-    explicit Passport(QWidget *parent = nullptr, MainWindow * win = nullptr);
+    explicit Passport(QWidget *parent = nullptr, MainWindow *win = nullptr);
     void set_passport_data(QString data);
     void fillFields(QString a, int index);
 signals:
@@ -28,8 +28,6 @@ private:
     QTextEdit *p_name;
     QComboBox *p_type;
     MainWindow *p_window;
-
-
 };
 
 #endif // PASSPORT_H
