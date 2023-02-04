@@ -28,7 +28,8 @@ public:
     DataTable * get_datatable();
 
 
-
+    Passport *passport;
+    DataTable *dt;
     Db_handler *handler;
 
 protected:
@@ -45,7 +46,5 @@ private:
     bool itemShow = false;
     db_struct * it_struct;
     db_struct *j_struct;
-    Passport *passport;
-    DataTable *dt;
 };
 #endif // MAINWINDOW_H

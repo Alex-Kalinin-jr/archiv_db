@@ -55,9 +55,9 @@ MainWindow::MainWindow()
 
     dt = new DataTable(nullptr, this);
     layer_1_1->addWidget(dt, 0, 1, 3, 1);
-
+    connect(this->dt->d_type, SIGNAL(currentIndexChanged(int)), this->passport, SLOT(change_type(int)));
+    connect(this->passport->p_box, SIGNAL(currentIndexChanged(int)), this->dt, SLOT(show_table(int)));
     setLayout(layer_1_1);
-
 }
 
 db_struct *MainWindow::get_items() {
