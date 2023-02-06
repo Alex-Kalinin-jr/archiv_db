@@ -18,6 +18,12 @@ public:
     bool resetData(db_struct *table);
     QStringList get_item_info(QString a);
     QStringList get_job_info(QString a);
+    bool set_item_info(QStringList data);
+    bool set_job_info(QStringList data);
+    bool deleteItem(const QString &in) const;
+    bool deleteJob(const QString &in) const;
+    bool fillJobsTable(db_struct *data, QTableWidget *table);
+    bool fillItemsTable(db_struct *data, QTableWidget *table);
 private:
     QSqlDatabase db;
     bool okOpen_h;

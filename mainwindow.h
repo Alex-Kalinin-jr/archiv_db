@@ -24,6 +24,7 @@ public:
     void loadFile(const QString &fileName);
     db_struct * get_items();
     db_struct * get_jobs();
+    db_struct * get_it_j();
     Passport * get_passport();
     DataTable * get_datatable();
 
@@ -46,5 +47,6 @@ private:
     bool itemShow = false;
     db_struct * it_struct;
     db_struct *j_struct;
+    db_struct *it_j_struct;
 };
 #endif // MAINWINDOW_H

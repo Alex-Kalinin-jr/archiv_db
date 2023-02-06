@@ -41,8 +41,10 @@ MainWindow::MainWindow()
     if (handler->isOk()) {
         it_struct = new db_struct("items", "id, name, description", 3);
         j_struct = new db_struct("jobs", "id, job, type", 3);
+        it_j_struct = new db_struct("item_job", "items, jobs", 2);
         handler->set_data(it_struct);
         handler->set_data(j_struct);
+        handler->set_data(it_j_struct);
     }
 
     // make central widget of the window be layout
@@ -55,8 +57,6 @@ MainWindow::MainWindow()
 
     dt = new DataTable(nullptr, this);
     layer_1_1->addWidget(dt, 0, 1, 3, 1);
-    connect(this->dt->d_type, SIGNAL(currentIndexChanged(int)), this->passport, SLOT(change_type(int)));
-    connect(this->passport->p_box, SIGNAL(currentIndexChanged(int)), this->dt, SLOT(show_table(int)));
     setLayout(layer_1_1);
 }
 
@@ -68,6 +68,10 @@ db_struct *MainWindow::get_jobs() {
     return j_struct;
 }
 
+db_struct *MainWindow::get_it_j() {
+    return it_j_struct;
+}
+
 Passport * MainWindow::get_passport() {
     return passport;
 }
@@ -75,6 +79,7 @@ Passport * MainWindow::get_passport() {
 DataTable * MainWindow::get_datatable() {
     return dt;
 }
+
 
 
 
