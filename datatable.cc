@@ -26,33 +26,33 @@ DataTable::DataTable(QWidget *parent, MainWindow *window)
 
 }
 
-bool DataTable::showData(db_struct *data)
-{
-    d_table->clear();
-    d_table->setColumnCount(2);
-    int size = data->t_data->size() / data->t_count;
-    d_table->setRowCount(size);
-    QTableWidgetItem *cell = nullptr;
-    QStringList *b = data->t_data;
-    for (int i = 0; i < size; ++i) {
-        for (int j = 0; j < 2; ++j) {
-            cell = new QTableWidgetItem;
-            cell->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-            QString a = b->at((data->t_count)*i+j);
-            cell->setText(a);
-            d_table->setItem(i, j, cell);
-        }
-    }
-}
+//bool DataTable::showData(db_struct *data)
+//{
+//    d_table->clear();
+//    d_table->setColumnCount(2);
+//    int size = data->t_data->size() / data->t_count;
+//    d_table->setRowCount(size);
+//    QTableWidgetItem *cell = nullptr;
+//    QStringList *b = data->t_data;
+//    for (int i = 0; i < size; ++i) {
+//        for (int j = 0; j < 2; ++j) {
+//            cell = new QTableWidgetItem;
+//            cell->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+//            QString a = b->at((data->t_count)*i+j);
+//            cell->setText(a);
+//            d_table->setItem(i, j, cell);
+//        }
+//    }
+//}
 
 void DataTable::show_table(int a)
 {
     if (a == 0) {
         d_title->setText("Items");
-        showData(d_window->get_items());
+        d_window->handler->fillItemsTable(d_window->get_items(), d_table);
     } else if (a == 1) {
         d_title->setText("Jobs");
-        showData(d_window->get_jobs());
+        d_window->handler->fillJobsTable(d_window->get_jobs(), d_table);
     }
     if (d_window->passport->p_box->currentIndex() != a)
         d_window->passport->p_box->setCurrentIndex(a);

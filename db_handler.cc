@@ -175,5 +175,6 @@ bool Db_handler::fillItemsTable(db_struct *data, QTableWidget *table) {
             table->setItem(i, j, cell);
         }
     }
+    table->sortItems(0);
     return true;
 }
