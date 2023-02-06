@@ -7,6 +7,7 @@
 #include "datatable.h"
 class MainWindow;
 class ItemJobsTable;
+class FilesTable;
 
 class Passport : public QWidget
 {
@@ -18,6 +19,7 @@ public:
     QComboBox *p_box;
     bool checkAnswer(QString, QString);
     void clearData();
+    QString get_id();
 signals:
 
 public slots:
@@ -26,6 +28,7 @@ public slots:
     void on_send_button_clicked();
     void on_del_button_clicked();
     void on_p_show_clicked();
+    void on_p_show_files_clicked();
 
 private:
     QVBoxLayout *p_layout;
@@ -40,9 +43,11 @@ private:
     MainWindow *p_window;
     QHBoxLayout *p_layout_2;
     QPushButton *p_add;
-    QPushButton *p_delete;
+    QPushButton *p_delete; // чистить таблицу item_job
     QPushButton *p_show;
+    QPushButton *p_show_files;
 
+ // these items - widget for adding item/job
     QWidget *p_add_widget = nullptr;
     QVBoxLayout *p_add_layout = nullptr;
     QPushButton *p_add_button = nullptr;
@@ -50,12 +55,20 @@ private:
     QTextEdit *p_add_name = nullptr;
     QTextEdit *p_add_descr = nullptr;
     QComboBox *p_add_type = nullptr;
+// end of items for adding item/job
 
+// list of jobs for certain item
     ItemJobsTable *p_show_table;
+//list of jobs for certain item
+    FilesTable *f_table;
 
-
-
-
+// these items - for showing of files;
+    QWidget *p_files_widget;
+    QVBoxLayout *p_files_layout;
+    QTableWidget *p_files_table;
+    QPushButton *p_files_add;
+    QPushButton *p_files_del;
+// end of items for showing of files;
 };
 
 #endif // PASSPORT_H

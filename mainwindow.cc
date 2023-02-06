@@ -42,9 +42,11 @@ MainWindow::MainWindow()
         it_struct = new db_struct("items", "id, name, description", 3);
         j_struct = new db_struct("jobs", "id, job, type", 3);
         it_j_struct = new db_struct("item_job", "items, jobs", 2);
+        f_struct = new db_struct("files", "job, file", 2);
         handler->set_data(it_struct);
         handler->set_data(j_struct);
         handler->set_data(it_j_struct);
+        handler->set_data(f_struct);
     }
 
     // make central widget of the window be layout
@@ -70,6 +72,10 @@ db_struct *MainWindow::get_jobs() {
 
 db_struct *MainWindow::get_it_j() {
     return it_j_struct;
+}
+
+db_struct *MainWindow::get_files() {
+    return f_struct;
 }
 
 Passport * MainWindow::get_passport() {

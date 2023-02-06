@@ -5,14 +5,18 @@
 DataTable::DataTable(QWidget *parent, MainWindow *window)
     : QWidget(parent), d_window(window)
 {
+    // this button is a mistake of architecture
+    d_type = new QComboBox();
+    d_type->setVisible(false);
+    d_type->insertItems(0, {"Item", "Job"});
+    // end of button
+
+
     d_title = new QLabel();
     d_title->setText("Item");
     d_title->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
     d_layout = new QVBoxLayout(this);
     d_table = new QTableWidget();
-    d_type = new QComboBox();
-    d_type->setVisible(false); // this button is a mistake of architecture
-    d_type->insertItems(0, {"Item", "Job"});
     d_reset = new QPushButton();
     d_reset->setText("Reset");
     d_layout->addWidget(d_title);
@@ -25,25 +29,6 @@ DataTable::DataTable(QWidget *parent, MainWindow *window)
     connect(d_reset, SIGNAL(clicked(bool)), this, SLOT(on_reset_clicked()));
 
 }
-
-//bool DataTable::showData(db_struct *data)
-//{
-//    d_table->clear();
-//    d_table->setColumnCount(2);
-//    int size = data->t_data->size() / data->t_count;
-//    d_table->setRowCount(size);
-//    QTableWidgetItem *cell = nullptr;
-//    QStringList *b = data->t_data;
-//    for (int i = 0; i < size; ++i) {
-//        for (int j = 0; j < 2; ++j) {
-//            cell = new QTableWidgetItem;
-//            cell->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-//            QString a = b->at((data->t_count)*i+j);
-//            cell->setText(a);
-//            d_table->setItem(i, j, cell);
-//        }
-//    }
-//}
 
 void DataTable::show_table(int a)
 {
@@ -64,13 +49,12 @@ void DataTable::set_passport_data(int row, int col) {
     d_window->get_passport()->fillFields(buff, indicator);
 }
 
-
 void DataTable::on_reset_clicked() {
     d_window->handler->set_data(d_window->get_items());
     d_window->handler->set_data(d_window->get_jobs());
-    d_table->clear();
     show_table(d_type->currentIndex());
 }
+
 
 
 ItemJobsTable::ItemJobsTable(QWidget *parent, MainWindow *window, QString item_id)
@@ -85,47 +69,95 @@ ItemJobsTable::ItemJobsTable(QWidget *parent, MainWindow *window, QString item_i
     d_remove = new QPushButton();
     d_remove->setText("Delete");
     d_layout->addWidget(d_remove);
+    connect(this->d_remove, SIGNAL(clicked(bool)), this, SLOT(on_d_remove_clicked()));
 
-    // this button is for new addjobtable
+// table for adding jobs to item
+    d_add_widget = new QWidget();
+    d_add_widget->setWindowModality(Qt::ApplicationModal);
+    d_add_layout = new QVBoxLayout(d_add_widget);
+
+    d_all_jobs_table = new QTableWidget;
+    d_add_layout->addWidget(d_all_jobs_table);
+    d_window->handler->fillJobsTable(d_window->get_jobs(), d_all_jobs_table);
+
     d_add_ok = new QPushButton();
     d_add_ok->setText("Add");
-    d_add_ok->setVisible(false);
+    d_add_layout->addWidget((d_add_ok));
+    connect(this->d_add_ok, SIGNAL(clicked(bool)), this, SLOT(on_d_add_ok_clicked()));
+// end of table
 }
 
 void ItemJobsTable::set_passport_data(int, int) {}
 
 void ItemJobsTable::on_reset_clicked() {
     d_window->handler->set_data(d_window->get_it_j());
-    d_table->clear();
     show_table(0);
 }
 
 void ItemJobsTable::show_table(int a) {
-    showData(d_window->get_it_j());
-}
-
-bool ItemJobsTable::showData(db_struct *data) {
-    d_table->clear();
-    d_table->setColumnCount(1);
-    d_table->setRowCount(0);
-    int size = data->t_data->size();
-    QTableWidgetItem *cell = nullptr;
-    QStringList *b = data->t_data;
-    for (int i = 0; i < size; i += 2) {
-        if (b->at(i) == d_item_id) {
-            cell = new QTableWidgetItem;
-            cell->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
-            d_table->setRowCount(d_table->rowCount()+1);
-            cell->setText(b->at(i+1));
-            d_table->setItem(d_table->rowCount()-1, 0, cell);
-        }
-    }
+    d_window->handler->fillItJRelationTable(d_window->get_it_j(), d_table, d_item_id);
 }
 
 void ItemJobsTable::on_d_append_clicked() {
-    QWidget d_add_widget;
-    QVBoxLayout d_add_layout(&d_add_widget);
-    QTableWidget d_all_jobs_table;
 
-    d_add_layout.addWidget((d_add_ok));
+    d_add_widget->show();
+}
+
+void ItemJobsTable::on_d_add_ok_clicked() {
+    int a = d_all_jobs_table->currentRow();
+    QString cur_id = d_window->passport->get_id();
+    QString cur_job = d_all_jobs_table->item(a, 0)->text();
+    d_window->handler->bindJobToItem(cur_id, cur_job);
+}
+
+void ItemJobsTable::on_d_remove_clicked() {
+    QString cur_id = d_window->passport->get_id();
+    QString cur_job = d_table->item(d_table->currentRow(), 1)->text();
+    d_window->handler->deleteItemJob(cur_id, cur_job);
+    on_reset_clicked();
+}
+
+
+
+
+FilesTable::FilesTable(QWidget *parent, MainWindow *window, QString job_id)
+        : DataTable(parent, window), f_job_id(job_id) {
+    f_filenames = new QStringList;
+    d_title->setText("Files for current job");
+
+    f_append = new QPushButton();
+    f_append->setText("Add");
+    d_layout->addWidget(f_append);
+    connect(f_append, SIGNAL(clicked(bool)), this, SLOT(on_f_append_clicked()));
+
+    f_remove = new QPushButton();
+    f_remove->setText("Delete");
+    d_layout->addWidget(f_remove);
+    connect(this->f_remove, SIGNAL(clicked(bool)), this, SLOT(on_f_remove_clicked()));
+}
+
+void FilesTable::show_table(int a) {
+    d_window->handler->fillFilesTable(d_window->get_files(), d_table, f_job_id);
+}
+
+void FilesTable::on_reset_clicked() {
+    d_window->handler->set_data(d_window->get_files());
+    show_table(0);
+}
+
+void FilesTable::on_f_append_clicked() {
+        QFileDialog *dialog = new QFileDialog(this);
+        dialog->setFileMode(QFileDialog::ExistingFiles);
+        dialog->setViewMode(QFileDialog::Detail);
+        *f_filenames = dialog->getOpenFileNames();
+        delete dialog;
+        if (!(f_filenames->isEmpty())) {
+            d_window->handler->set_files_info(f_filenames, d_window->passport->get_id());
+        }
+}
+
+void FilesTable::on_f_remove_clicked() {
+    QString removed_road = d_table->item(d_table->currentRow(), 1)->text();
+    QString job = d_table->item(d_table->currentRow(), 0)->text();
+    d_window->handler->remove_file_from_job(job, removed_road);
 }

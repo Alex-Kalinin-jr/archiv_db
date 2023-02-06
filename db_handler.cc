@@ -178,3 +178,113 @@ bool Db_handler::fillItemsTable(db_struct *data, QTableWidget *table) {
     table->sortItems(0);
     return true;
 }
+
+bool Db_handler::fillItJRelationTable(db_struct *data, QTableWidget *table, QString str) {
+    table->clear();
+    int size = data->t_data->size() / data->t_count;
+    QTableWidgetItem *cell = nullptr;
+    QStringList *list = data->t_data;
+    table->setColumnCount(data->t_count);
+    table->setHorizontalHeaderLabels({"Item", "Job"});
+    table->setRowCount(0);
+    for (int i = 0; i < size; ++i) {
+        if (list->at((data->t_count)*i) == str) {
+            table->setRowCount(table->rowCount()+1);
+            for (int j = 0; j < data->t_count; ++j) {
+                cell = new QTableWidgetItem;
+                cell->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+                QString *a = new QString(list->at((data->t_count)*i+j));
+                cell->setText(*a);
+                table->setItem(table->rowCount()-1, j, cell);
+            }
+        }
+    }
+    table->sortItems(0);
+    return true;
+}
+
+bool Db_handler::bindJobToItem(QString &item, QString &job) {
+    if (okOpen_h) {
+        QSqlQuery my(db);
+        QString a = QString("select * from item_job where item='%1' and job='%2';")
+                    .arg(item)
+                    .arg(job);
+        my.exec(a);
+        if (my.next()) {
+            return false;
+        } else {
+            a = QString("insert into item_job values ('%1', '%2');")
+                    .arg(item)
+                    .arg(job);
+            my.exec(a);
+            return true;
+        }
+    }
+}
+
+bool Db_handler::deleteItemJob(const QString &item, const QString &job) {
+    if (okOpen_h) {
+        QSqlQuery my(db);
+        QString a = QString("delete from item_job where items='%1' and jobs='%2';")
+                    .arg(item)
+                    .arg(job);
+        my.exec(a);
+        return true;
+    }
+}
+
+bool Db_handler::fillFilesTable(db_struct *data, QTableWidget *table, QString str) {
+    table->clear();
+    int size = data->t_data->size() / data->t_count;
+    QTableWidgetItem *cell = nullptr;
+    QStringList *list = data->t_data;
+    table->setColumnCount(data->t_count);
+    table->setHorizontalHeaderLabels({"Job", "File"});
+    table->setRowCount(0);
+    for (int i = 0; i < size; ++i) {
+        if (list->at((data->t_count)*i) == str) {
+            table->setRowCount(table->rowCount()+1);
+            for (int j = 0; j < data->t_count; ++j) {
+                cell = new QTableWidgetItem;
+                cell->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+                QString *a = new QString(list->at((data->t_count)*i+j));
+                cell->setText(*a);
+                table->setItem(table->rowCount()-1, j, cell);
+            }
+        }
+    }
+    table->sortItems(0);
+    return true;
+}
+
+bool Db_handler::set_files_info(QStringList *data, const QString &job) {
+    if (okOpen_h) {
+        QSqlQuery my(db);
+        QString a;
+        for (int i = 0; i < data->size(); ++i) {
+            a = QString("select * from jobs where road='%1' and job='%2';")
+                .arg(data->at(i))
+                .arg(job);
+            my.exec(a);
+            if (!my.next()) {
+                a = QString("insert into files values ('%1', '%2', '');")
+                    .arg(job)
+                    .arg(data->at(i));
+                my.exec((a));
+            }
+        }
+        return true;
+    }
+}
+
+bool Db_handler::remove_file_from_job(QString &job, QString &file) {
+    if (okOpen_h) {
+        QSqlQuery my(db);
+        QString a = QString("DELETE FROM files WHERE job='%1' and file='%2';")
+                    .arg(job)
+                    .arg(file);
+        my.exec(a);
+        return true;
+    }
+    return false;
+}

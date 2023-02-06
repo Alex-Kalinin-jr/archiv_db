@@ -25,6 +25,7 @@ public:
     db_struct * get_items();
     db_struct * get_jobs();
     db_struct * get_it_j();
+    db_struct * get_files();
     Passport * get_passport();
     DataTable * get_datatable();
 
@@ -48,5 +49,6 @@ private:
     db_struct * it_struct;
     db_struct *j_struct;
     db_struct *it_j_struct;
+    db_struct *f_struct;
 };
 #endif // MAINWINDOW_H

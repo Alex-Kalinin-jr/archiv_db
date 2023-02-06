@@ -22,8 +22,14 @@ public:
     bool set_job_info(QStringList data);
     bool deleteItem(const QString &in) const;
     bool deleteJob(const QString &in) const;
+    bool deleteItemJob(const QString &item, const QString &job);
     bool fillJobsTable(db_struct *data, QTableWidget *table);
     bool fillItemsTable(db_struct *data, QTableWidget *table);
+    bool fillItJRelationTable(db_struct *data, QTableWidget *table, QString str);
+    bool bindJobToItem(QString &item, QString &job);
+    bool fillFilesTable(db_struct *data, QTableWidget *table, QString str);
+    bool set_files_info(QStringList *files, const QString &job);
+    bool remove_file_from_job(QString &job, QString &file);
 private:
     QSqlDatabase db;
     bool okOpen_h;

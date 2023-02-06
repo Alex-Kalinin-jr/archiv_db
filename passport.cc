@@ -77,6 +77,12 @@ Passport::Passport(QWidget *parent, MainWindow *win) : QWidget(parent), p_window
     p_show->setText("show jobs");
     p_layout_2->addWidget(p_show);
     connect(p_show, SIGNAL(clicked()), this, SLOT(on_p_show_clicked()));
+
+    p_show_files = new QPushButton();
+    p_show_files->setText("show files");
+    p_layout_2->addWidget(p_show_files);
+    p_show_files->setVisible(false);
+    connect(p_show_files, SIGNAL(clicked(bool)), this, SLOT(on_p_show_files_clicked()));
 }
 
 void Passport::change_type(int a)
@@ -86,11 +92,15 @@ void Passport::change_type(int a)
         pl_description->setText("Type:");
         p_description->setVisible(false);
         p_type->setVisible(true);
+        p_show->setVisible(false);
+        p_show_files->setVisible(true);
     } else if (a == 0) {
         pl_title->setText("Item");
         pl_description->setText("Description:");
         p_type->setVisible(false);
         p_description->setVisible(true);
+        p_show->setVisible(true);
+        p_show_files->setVisible(false);
     }
     clearData();
     if (p_window->dt->d_type->currentIndex() != a)
@@ -162,6 +172,7 @@ void Passport::on_send_button_clicked() {
     } else if (indicator == 1) {
         this->p_window->handler->set_job_info(sended);
     }
+    p_add_widget->hide();
 }
 
 void Passport::on_del_button_clicked() {
@@ -200,4 +211,17 @@ void Passport::on_p_show_clicked() {
     p_show_table = new ItemJobsTable(nullptr, p_window, p_id->text());
     p_show_table->show_table(0);
     p_show_table->show();
+}
+
+QString Passport::get_id() {
+    return p_id->text();
+};
+
+void Passport::on_p_show_files_clicked() {
+    if (p_box->currentIndex() != 1) {
+        return;
+    }
+    f_table = new FilesTable(nullptr, p_window, p_id->text());
+    f_table->show_table(0);
+    f_table->show();
 }
