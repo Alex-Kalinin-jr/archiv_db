@@ -111,32 +111,92 @@ bool Db_handler::set_job_info(QStringList data) {
 bool Db_handler::deleteItem(const QString &in) const {
     if (okOpen_h) {
         QSqlQuery my(db);
-        QString a = QString("select * from items where id='%1';").arg(in);
+        QString a = QString("DELETE FROM items WHERE id='%1';").arg(in);
         my.exec(a);
-        if (my.next()) {
-            a = QString("DELETE FROM items WHERE id='%1';").arg(in);
-            my.exec(a);
-            return true;
-        } else {
-            return false;
-        }
+        a = QString("DELETE FROM item_job WHERE items='%1';").arg(in);
+        my.exec(a);
     }
 }
 
 bool Db_handler::deleteJob(const QString &in) const {
     if (okOpen_h) {
         QSqlQuery my(db);
-        QString a = QString("select * from items where id='%1';").arg(in);
+        QString a = QString("DELETE FROM jobs WHERE id='%1';").arg(in);
+        my.exec(a);
+        a = QString("DELETE FROM files WHERE job='%1';").arg(in);
+        my.exec(a);
+        a = QString("DELETE FROM item_job WHERE jobs='%1';").arg(in);
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool Db_handler::bindJobToItem(QString &item, QString &job) {
+    if (okOpen_h) {
+        QSqlQuery my(db);
+        QString a = QString("select * from item_job where items='%1' and jobs='%2';")
+                    .arg(item)
+                    .arg(job);
         my.exec(a);
         if (my.next()) {
-            a = QString("DELETE FROM jobs WHERE id='%1';").arg(in);
+            return false;
+        } else {
+            a = QString("insert into item_job values ('%1', '%2');")
+                    .arg(item)
+                    .arg(job);
             my.exec(a);
             return true;
-        } else {
-            return false;
         }
     }
 }
+
+// unbinds certain job from certain item. DOES NOT REMOVE JOB NOR ITEM themselve
+bool Db_handler::unbind_job_from_item(const QString &item, const QString &job) {
+    if (okOpen_h) {
+        QSqlQuery my(db);
+        QString a = QString("delete from item_job where items='%1' and jobs='%2';")
+                    .arg(item)
+                    .arg(job);
+        my.exec(a);
+        return true;
+    }
+}
+
+// binds list of files to certain job
+bool Db_handler::set_files_info(QStringList *data, const QString &job) {
+    if (okOpen_h) {
+        QSqlQuery my(db);
+        QString a;
+        for (int i = 0; i < data->size(); ++i) {
+            a = QString("select * from jobs where road='%1' and job='%2';")
+                .arg(data->at(i))
+                .arg(job);
+            my.exec(a);
+            if (!my.next()) {
+                a = QString("insert into files values ('%1', '%2', '');")
+                    .arg(job)
+                    .arg(data->at(i));
+                my.exec((a));
+            }
+        }
+        return true;
+    }
+}
+
+// unbinds certain file from certain job. DOES NOT REMOVE JOB
+bool Db_handler::remove_file_from_job(QString &job, QString &file) {
+    if (okOpen_h) {
+        QSqlQuery my(db);
+        QString a = QString("DELETE FROM files WHERE job='%1' and file='%2';")
+                    .arg(job)
+                    .arg(file);
+        my.exec(a);
+        return true;
+    }
+    return false;
+}
+
 
 bool Db_handler::fillJobsTable(db_struct *data, QTableWidget *table) {
     table->clear();
@@ -203,35 +263,6 @@ bool Db_handler::fillItJRelationTable(db_struct *data, QTableWidget *table, QStr
     return true;
 }
 
-bool Db_handler::bindJobToItem(QString &item, QString &job) {
-    if (okOpen_h) {
-        QSqlQuery my(db);
-        QString a = QString("select * from item_job where item='%1' and job='%2';")
-                    .arg(item)
-                    .arg(job);
-        my.exec(a);
-        if (my.next()) {
-            return false;
-        } else {
-            a = QString("insert into item_job values ('%1', '%2');")
-                    .arg(item)
-                    .arg(job);
-            my.exec(a);
-            return true;
-        }
-    }
-}
-
-bool Db_handler::deleteItemJob(const QString &item, const QString &job) {
-    if (okOpen_h) {
-        QSqlQuery my(db);
-        QString a = QString("delete from item_job where items='%1' and jobs='%2';")
-                    .arg(item)
-                    .arg(job);
-        my.exec(a);
-        return true;
-    }
-}
 
 bool Db_handler::fillFilesTable(db_struct *data, QTableWidget *table, QString str) {
     table->clear();
@@ -255,36 +286,4 @@ bool Db_handler::fillFilesTable(db_struct *data, QTableWidget *table, QString st
     }
     table->sortItems(0);
     return true;
-}
-
-bool Db_handler::set_files_info(QStringList *data, const QString &job) {
-    if (okOpen_h) {
-        QSqlQuery my(db);
-        QString a;
-        for (int i = 0; i < data->size(); ++i) {
-            a = QString("select * from jobs where road='%1' and job='%2';")
-                .arg(data->at(i))
-                .arg(job);
-            my.exec(a);
-            if (!my.next()) {
-                a = QString("insert into files values ('%1', '%2', '');")
-                    .arg(job)
-                    .arg(data->at(i));
-                my.exec((a));
-            }
-        }
-        return true;
-    }
-}
-
-bool Db_handler::remove_file_from_job(QString &job, QString &file) {
-    if (okOpen_h) {
-        QSqlQuery my(db);
-        QString a = QString("DELETE FROM files WHERE job='%1' and file='%2';")
-                    .arg(job)
-                    .arg(file);
-        my.exec(a);
-        return true;
-    }
-    return false;
 }

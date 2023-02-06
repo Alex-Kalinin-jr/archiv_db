@@ -113,10 +113,9 @@ void ItemJobsTable::on_d_add_ok_clicked() {
 void ItemJobsTable::on_d_remove_clicked() {
     QString cur_id = d_window->passport->get_id();
     QString cur_job = d_table->item(d_table->currentRow(), 1)->text();
-    d_window->handler->deleteItemJob(cur_id, cur_job);
+    d_window->handler->unbind_job_from_item(cur_id, cur_job);
     on_reset_clicked();
 }
-
 
 
 

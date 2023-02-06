@@ -183,10 +183,6 @@ void Passport::on_del_button_clicked() {
         } else if (p_box->currentIndex() == 1) {
             p_window->handler->deleteJob(deleted);
         }
-
-        // here
-    } else {
-        pl_title->setText("Not permitted");
     }
 }
 

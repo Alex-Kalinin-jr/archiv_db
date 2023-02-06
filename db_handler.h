@@ -22,7 +22,7 @@ public:
     bool set_job_info(QStringList data);
     bool deleteItem(const QString &in) const;
     bool deleteJob(const QString &in) const;
-    bool deleteItemJob(const QString &item, const QString &job);
+    bool unbind_job_from_item(const QString &item, const QString &job);
     bool fillJobsTable(db_struct *data, QTableWidget *table);
     bool fillItemsTable(db_struct *data, QTableWidget *table);
     bool fillItJRelationTable(db_struct *data, QTableWidget *table, QString str);
